@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 광고 소재 통합 로드맵</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500;700;800;900&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 단일 칼럼 문서 + 12주 간트를 중심축으로 둔 제작 플랜. 섹션 번호는 원문 문서 번호를 그대로 따름 */
+:root {
+  --bg: #f4f5f8;
+  --surface: #ffffff;
+  --fg: #141821;
+  --muted: #5a6273;
+  --line: #dde1ea;
+  --solo: #2448d8;        /* 카피바이저 고도화 */
+  --solo-soft: #e4e9fd;
+  --merge: #0b8476;       /* 2·3번 통합 */
+  --merge-soft: #dcf2ee;
+  --prep: #8a91a1;
+  --code-bg: #10131b;
+  --code-fg: #d9def0;
+  --code-key: #8fb0ff;
+  --font-display: "Gothic A1", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f121a; --surface: #171b26; --fg: #e8ebf3; --muted: #9aa2b5; --line: #2a3040;
+    --solo: #7d98ff; --solo-soft: #1f2a52; --merge: #3fc7b3; --merge-soft: #123a36; --prep: #6d7487;
+    --code-bg: #0a0c12; --code-fg: #d9def0; --code-key: #8fb0ff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f121a; --surface: #171b26; --fg: #e8ebf3; --muted: #9aa2b5; --line: #2a3040;
+  --solo: #7d98ff; --solo-soft: #1f2a52; --merge: #3fc7b3; --merge-soft: #123a36; --prep: #6d7487;
+  --code-bg: #0a0c12; --code-fg: #d9def0; --code-key: #8fb0ff;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 15.5px; line-height: 1.7;
+  margin: 0;
+  word-break: keep-all; overflow-wrap: anywhere;
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+p { margin: 0; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* Header */
+header.top { padding-block: 0 32px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; align-items: end; border-bottom: 2px solid var(--fg); }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+h1 { white-space: nowrap; font-size: clamp(24px, 5.4vw, 56px); font-weight: 900; line-height: 1.12; letter-spacing: -0.03em; }
+.sub { margin-top: 16px; color: var(--muted); font-size: 16px; max-width: 46ch; }
+.ratios { display: flex; align-items: flex-end; gap: 10px; }
+.ratio { display: grid; gap: 6px; justify-items: center; }
+.ratio i { display: block; border: 1.5px solid var(--fg); background: var(--surface); }
+.ratio i.src { background: var(--solo); border-color: var(--solo); }
+.ratio span { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.arrow { font-family: var(--font-mono); color: var(--muted); padding-bottom: 22px; }
+
+/* Thesis */
+.thesis { margin-top: 32px; display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; }
+.thesis .label { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--solo); padding-top: 4px; }
+.thesis p { font-family: var(--font-display); font-weight: 700; font-size: clamp(18px, 2.2vw, 22px); line-height: 1.55; letter-spacing: -0.01em; }
+.rules { margin: 28px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+@media (min-width: 1000px) { .rules li { white-space: nowrap; } }
+.rules li { padding-left: 18px; position: relative; color: var(--fg); }
+.rules li::before { content: ""; position: absolute; left: 0; top: .72em; width: 8px; height: 2px; background: var(--solo); }
+
+/* Section */
+.sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 22px; }
+.sec-num { font-family: var(--font-display); font-size: clamp(22px, 2.8vw, 28px); font-weight: 800; letter-spacing: -0.02em; color: var(--solo); font-variant-numeric: tabular-nums; }
+h2 { font-size: clamp(22px, 2.8vw, 28px); font-weight: 800; letter-spacing: -0.02em; }
+.lede { color: var(--muted); max-width: 62ch; margin-bottom: 24px; }
+.lede.one-line { max-width: none; }
+@media (min-width: 1000px) { .lede.one-line { white-space: nowrap; } }
+
+/* Pipeline */
+.pipe { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)) auto; gap: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; overflow: hidden; }
+.stage { padding: 18px 16px; border-right: 1px solid var(--line); display: grid; align-content: start; gap: 8px; min-width: 0; }
+.stage:last-child { border-right: 0; }
+.stage h3 { font-size: 15px; font-weight: 800; letter-spacing: -0.01em; }
+.stage p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.stage .tag { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.stage.split { padding: 0; display: grid; grid-template-rows: 1fr 1fr; gap: 0; }
+.stage.split > div { padding: 14px 16px; display: grid; gap: 6px; align-content: start; }
+.stage.split > div + div { border-top: 1px dashed var(--line); }
+.stage.data { background: var(--solo-soft); }
+.stage.data h3 { color: var(--solo); }
+.stage.out h3 { color: var(--merge); }
+.stage.out p { white-space: nowrap; }
+.foot { margin-top: 10px; font-size: 13px; color: var(--muted); }
+
+/* Strategy mix */
+.mix { display: grid; gap: 18px; }
+.mix-row { display: grid; grid-template-columns: 64px minmax(0, 1fr) minmax(0, 260px); gap: 18px; align-items: center; }
+.mix-row b { font-family: var(--font-display); font-weight: 800; }
+.bar { display: flex; min-height: 34px; border-radius: 4px; overflow: hidden; font-family: var(--font-mono); font-size: 12px; }
+.bar span { display: flex; align-items: center; padding: 6px 10px; line-height: 1.3; white-space: nowrap; }
+.bar .s { background: var(--solo); color: #fff; }
+.bar .m { background: var(--merge); color: #fff; }
+.bar .q { background: var(--solo-soft); color: var(--solo); }
+.bar .p { background: var(--merge-soft); color: var(--merge); }
+.mix-row small { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.callout { margin-bottom: 26px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--merge); border-radius: 0 6px 6px 0; }
+.callout strong { font-family: var(--font-display); display: block; margin-bottom: 4px; }
+.callout p { color: var(--muted); font-size: 14.5px; }
+
+/* Gantt */
+.legend { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 14px; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { width: 14px; height: 10px; border-radius: 2px; display: inline-block; }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.gantt { min-width: 760px; display: grid; grid-template-columns: 220px repeat(12, minmax(0, 1fr)); }
+.gantt .hd { font-family: var(--font-mono); font-size: 11px; color: var(--muted); padding: 10px 0; text-align: center; border-bottom: 1px solid var(--line); }
+.gantt .hd:first-child { text-align: left; padding-left: 16px; }
+.gantt .name { padding: 9px 16px; border-bottom: 1px solid var(--line); display: flex; gap: 10px; align-items: baseline; min-width: 0; }
+.gantt .name .mono { font-size: 11px; color: var(--muted); min-width: 22px; }
+.gantt .name a { color: var(--fg); text-decoration: none; font-size: 13.5px; font-weight: 500; }
+.gantt .name a:hover, .gantt .name a:focus-visible { color: var(--solo); text-decoration: underline; }
+.gantt .track { grid-column: 2 / -1; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: center;
+  background-image: linear-gradient(to right, var(--line) 1px, transparent 1px); background-size: calc(100% / 12) 100%; }
+.gantt .seg { height: 18px; border-radius: 3px; margin-inline: 2px; }
+.seg.solo { background: var(--solo); }
+.seg.merge { background: var(--merge); }
+.seg.prep { background: var(--prep); }
+.gantt > :nth-last-child(-n+2) { border-bottom: 0; }
+
+/* Phase list */
+.phases { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.phase { display: grid; grid-template-columns: 120px minmax(0, 1fr) minmax(0, 1fr); gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 20px; }
+.phase:target { background: var(--solo-soft); margin-inline: -12px; padding-inline: 12px; border-radius: 4px; }
+.phase .meta { display: grid; gap: 4px; align-content: start; }
+.phase .meta .pid { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+.phase .meta .wk { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.chip { justify-self: start; font-size: 11px; padding: 1px 8px; border-radius: 99px; font-weight: 600; }
+.chip.solo { background: var(--solo-soft); color: var(--solo); }
+.chip.merge { background: var(--merge-soft); color: var(--merge); }
+.chip.prep { background: var(--line); color: var(--muted); }
+.phase h3 { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+.phase .work { font-size: 14.5px; color: var(--fg); }
+.gate { font-size: 14px; color: var(--muted); border-left: 2px solid var(--line); padding-left: 14px; }
+.gate em { display: block; font-style: normal; font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+th { text-align: left; font-family: var(--font-mono); font-weight: 500; font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); padding: 12px 16px; border-bottom: 1px solid var(--line); }
+td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 600; font-family: var(--font-display); white-space: nowrap; }
+td.how { color: var(--muted); }
+.tbl { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.tbl table { min-width: 640px; }
+.grp-merge tr.grp td { border-top: 1px solid var(--line); padding-block: 10px; font-family: var(--font-mono); font-weight: 500; font-size: 11.5px; letter-spacing: .05em; color: var(--merge); background: var(--merge-soft); }
+.grp-merge td:first-child { color: var(--merge); }
+
+/* Creative data */
+.cd { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+pre.json { margin: 0; background: var(--code-bg); color: var(--code-fg); font-family: var(--font-mono); font-size: 13px; line-height: 1.65; padding: 22px 24px; border-radius: 6px; overflow-x: auto; }
+pre.json .k { color: var(--code-key); }
+.cd-notes { display: grid; gap: 18px; }
+.cd-notes div { display: grid; gap: 4px; }
+.cd-notes b { font-family: var(--font-mono); font-size: 13px; color: var(--solo); font-weight: 500; }
+.cd-notes p { font-size: 14px; color: var(--muted); }
+.principle { margin-top: 22px; padding: 20px 22px; border: 1.5px solid var(--fg); border-radius: 6px; display: grid; gap: 6px; }
+.principle strong { font-family: var(--font-display); font-size: 18px; font-weight: 800; }
+.principle p { color: var(--muted); font-size: 14.5px; }
+
+/* Priority */
+.prio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.prio > div { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: grid; gap: 12px; align-content: start; }
+.prio .lvl { font-family: var(--font-mono); font-size: 22px; font-weight: 500; }
+.prio .why { font-size: 13.5px; color: var(--muted); }
+.prio ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.prio li { font-size: 13px; padding: 3px 10px; border-radius: 4px; background: var(--bg); border: 1px solid var(--line); }
+.prio .p0 .lvl { color: var(--solo); }
+.prio .p1 .lvl { color: var(--merge); }
+.prio .p2 .lvl { color: var(--muted); }
+
+/* KPI */
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.kpi { padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; display: grid; gap: 10px; align-content: start; }
+.kpi .area { font-size: 13px; color: var(--muted); font-weight: 600; }
+.kpi .big { font-family: var(--font-display); font-weight: 900; font-size: 34px; letter-spacing: -0.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.kpi .big small { font-size: 15px; font-weight: 700; color: var(--muted); letter-spacing: 0; }
+.kpi p { font-size: 13.5px; }
+.kpi .how { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; }
+
+/* Ops principles & deferred */
+.two { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 40px; }
+.ops { margin: 0; padding: 0; list-style: none; counter-reset: op; display: grid; gap: 20px; }
+.ops li { counter-increment: op; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 4px 12px; }
+.ops li::before { content: counter(op); grid-row: span 2; font-family: var(--font-mono); font-size: 13px; width: 26px; height: 26px; border: 1px solid var(--fg); border-radius: 50%; display: grid; place-items: center; }
+.ops b { font-family: var(--font-display); font-weight: 800; font-size: 16px; }
+.ops p { font-size: 14px; color: var(--muted); }
+.defer { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.defer li { padding: 11px 0 11px 26px; border-bottom: 1px solid var(--line); font-size: 14px; position: relative; color: var(--muted); }
+.defer li::before { content: "—"; position: absolute; left: 0; color: var(--prep); font-family: var(--font-mono); }
+h3.small { font-size: 15px; font-weight: 800; margin-bottom: 14px; }
+
+/* Closing */
+.closing { display: grid; gap: 18px; }
+.closing blockquote { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(19px, 2.4vw, 25px); line-height: 1.55; letter-spacing: -0.015em; max-width: 38em; }
+.closing blockquote mark { background: none; color: var(--solo); }
+.closing blockquote mark.m { color: var(--merge); }
+.closing p { color: var(--muted); max-width: 62ch; }
+
+/* Paging */
+html { scroll-snap-type: y mandatory; }
+.page {
+  min-height: 100vh; min-height: 100svh;
+  scroll-snap-align: start; scroll-snap-stop: always;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-block: 92px 56px;
+  padding-inline: max(20px, calc((100% - 1040px) / 2));
+}
+.page > * { width: 100%; }
+@media (pointer: fine) { .page { cursor: grab; } .page.dragging { cursor: grabbing; } }
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) max(20px, calc((100% - 1040px) / 2)) 10px;
+  display: flex; align-items: center; gap: 14px;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.tb-title { font-family: var(--font-display); font-weight: 800; font-size: 14px; white-space: nowrap; }
+.tb-sec { flex: 1; min-width: 0; color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-ctrl { display: flex; align-items: center; gap: 8px; }
+.tb-ctrl button { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--fg); font-family: var(--font-mono); font-size: 14px; cursor: pointer; }
+.tb-ctrl button:hover:not(:disabled) { border-color: var(--solo); color: var(--solo); }
+.tb-ctrl button:disabled { opacity: .35; cursor: default; }
+.tb-ctrl button:focus-visible { outline: 2px solid var(--solo); outline-offset: 2px; }
+.count { font-family: var(--font-mono); font-size: 13px; min-width: 6ch; text-align: center; font-variant-numeric: tabular-nums; }
+.count b { color: var(--solo); font-weight: 500; }
+.progress { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0; background: var(--solo); transition: width .25s ease; }
+@media (prefers-reduced-motion: reduce) { .progress { transition: none; } }
+
+a:focus-visible { outline: 2px solid var(--solo); outline-offset: 2px; }
+
+@media (max-width: 860px) {
+  .pipe { grid-template-columns: minmax(0, 1fr); }
+  .stage { border-right: 0; border-bottom: 1px solid var(--line); }
+  .stage:last-child { border-bottom: 0; }
+  .stage.split { grid-template-rows: auto auto; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .prio, .cd, .two { grid-template-columns: minmax(0, 1fr); }
+  .phase { grid-template-columns: 96px minmax(0, 1fr); }
+  .phase .gate { grid-column: 2; }
+}
+@media (max-width: 620px) {
+  .page { padding-inline: 16px; }
+  .tb-title { display: none; }
+  header.top { grid-template-columns: minmax(0, 1fr); padding-block: 40px 28px; gap: 28px; }
+  .thesis { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .rules { grid-template-columns: minmax(0, 1fr); }
+  .mix-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .kpis { grid-template-columns: minmax(0, 1fr); }
+  .phase { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .phase .meta { grid-auto-flow: column; justify-content: start; gap: 12px; align-items: center; }
+  .phase .gate { grid-column: 1; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<nav class="topbar" aria-label="페이지 이동">
+  <span class="tb-title">AI 광고 소재 통합 로드맵</span>
+  <span class="tb-sec" id="tbSec">개요</span>
+  <div class="tb-ctrl">
+    <button type="button" id="prevBtn" aria-label="이전 페이지">↑</button>
+    <span class="count" aria-live="polite"><b id="curNum">1</b> / <span id="totalNum">14</span></span>
+    <button type="button" id="nextBtn" aria-label="다음 페이지">↓</button>
+  </div>
+  <i class="progress" id="progress"></i>
+</nav>
+
+<main class="deck">
+<section class="page" data-title="개요">
+  <header class="top">
+    <div>
+      <div class="eyebrow">전체 개발 로드맵 · 12주</div>
+      <h1>AI 광고 소재 통합 솔루션</h1>
+      <p class="sub">Copyvisor 솔루션 고도화 및 ADvisor 통합 타임라인</p>
+    </div>
+  </header>
+
+  <div class="thesis">
+    <div class="label">프로젝트 핵심 방향</div>
+    <div>
+      <p>카피바이저로 생성하는 디자인 품질을 우선 고도화하되,<br>Creative Data 구조를 초반부터 설계하고 Copyvisor가 6~70% 안정화되는 시점부터<br>베리바이저, 모션팩토리 통합을 병렬 진행한다.</p>
+      <ul class="rules">
+        <li>완성형 플랫폼을 한 번에 만들지 않고, 작동하는 작은 버전을 반복 확장한다.</li>
+        <li>AI는 판단·분류·추천에 활용하고, 레이아웃·장식·효과 규칙은 디자이너가 직접 정의한다.</li>
+        <li>기능 수보다 실제 광고 활용 가능성과 디자이너 수정 시간을 핵심 KPI로 본다.</li>
+        <li>PSD를 공통 원본으로 삼지 않는다. Creative Data를 공통 데이터로 쓰고 PSD는 출력 포맷으로 둔다.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+  <!-- 1 -->
+  <section class="page" id="structure" data-title="1. 최종 목표 구조">
+    <div class="sec-head"><span class="sec-num">1</span><h2>최종 목표 구조</h2></div>
+    <p class="lede">최종적으로는 아래 한 흐름으로 동작하는 Creative Production Platform을 목표로 한다.</p>
+    <div class="pipe">
+      <div class="stage"><span class="tag">INPUT</span><h3>브리프 입력</h3><p>기획안, 상품/서비스, 프로모션, 브랜드 정보</p></div>
+      <div class="stage"><span class="tag">DIRECT</span><h3>Creative Director</h3><p>광고 목적·정보 우선순위·디자인 방향 결정</p></div>
+      <div class="stage split">
+        <div><span class="tag">PARALLEL</span><h3>Copy Engine</h3><p>카피 구조화</p></div>
+        <div><h3>Visual Engine</h3><p>비주얼 구성 요소 생성</p></div>
+      </div>
+      <div class="stage"><span class="tag">ASSEMBLE</span><h3>Composition Engine</h3><p>레이아웃 규칙에 따라 최종 1:1 소재 조립</p></div>
+      <div class="stage"><span class="tag">REVIEW</span><h3>Design Critic</h3><p>결과물 평가 및 수정 포인트 제안</p></div>
+      <div class="stage data"><span class="tag">SOURCE</span><h3>Creative Data</h3><p>카피·이미지·좌표·역할·레이아웃 정보를 공통 데이터로 저장</p></div>
+      <div class="stage out split">
+        <div><span class="tag">EXTEND</span><h3>Resize / Motion</h3><p>베리바이저, 모션팩토리</p></div>
+        <div><span class="tag">OUTPUT</span><h3>출력</h3><p class="mono">PSD · JPG · MP4</p></div>
+      </div>
+    </div>
+    <p class="foot">모든 단계는 다음 단계가 재사용할 수 있는 구조화 데이터를 결과로 남긴다.</p>
+  </section>
+
+  <!-- 2 -->
+  <section class="page" id="strategy" data-title="2. 전체 개발 전략">
+    <div class="sec-head"><span class="sec-num">2</span><h2>전체 개발 전략</h2></div>
+    <div class="callout">
+      <strong>권장 방식: 부분 병렬</strong>
+      <p>카피바이저 고도화를 중심축으로 두고, 데이터 구조와 통합 PoC는 중간부터 병렬 진행한다.</p>
+    </div>
+    <div class="mix">
+      <div class="mix-row"><b>초반</b>
+        <div class="bar"><span class="s" style="flex:80">카피바이저 고도화 80%</span><span class="p" style="flex:20">통합 20%</span></div>
+        <small>디자인 품질, 카피 구조, 레이아웃, Visual Engine</small></div>
+      <div class="mix-row"><b>중반</b>
+        <div class="bar"><span class="s" style="flex:50">카피바이저 고도화 50%</span><span class="m" style="flex:50">통합 50%</span></div>
+        <small>Creative Data 안정화, Resize·Motion 연결 PoC</small></div>
+      <div class="mix-row"><b>후반</b>
+        <div class="bar"><span class="q" style="flex:30">카피바이저 고도화 30%</span><span class="m" style="flex:70">통합 70%</span></div>
+        <small>통합 Workflow, UI, QA 및 안정화</small></div>
+    </div>
+  </section>
+
+  <!-- 3 + 6 -->
+  <section class="page" id="roadmap" data-title="3. 단계별 개발 로드맵">
+    <div class="sec-head"><span class="sec-num">3</span><h2>단계별 개발 로드맵</h2></div>
+    <p class="lede one-line">Phase 0부터 11까지 12주에 걸쳐 일부 구간을 겹쳐 진행한다. 단계 이름을 누르면 상세 내용으로 이동한다.</p>
+    <div class="legend">
+      <span><i style="background:var(--prep)"></i>현 상태 정리</span>
+      <span><i style="background:var(--solo)"></i>카피바이저 고도화</span>
+      <span><i style="background:var(--merge)"></i>솔루션 통합</span>
+    </div>
+    <div class="scroll"><div class="gantt" id="gantt"></div></div>
+  </section>
+
+  <section class="page" id="phases-a" data-title="3. 로드맵 상세 · Phase 0–5">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Phase 0–5 · 카피바이저 고도화</h2></div>
+    <div class="phases" id="phasesA"></div>
+  </section>
+
+  <section class="page" id="phases-b" data-title="3. 로드맵 상세 · Phase 6–11">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Phase 6–11 · 데이터 확정과 통합</h2></div>
+    <div class="phases" id="phasesB"></div>
+  </section>
+
+  <!-- 4 -->
+  <section class="page" id="modules" data-title="4. 카피바이저 기능 구조">
+    <div class="sec-head"><span class="sec-num">4</span><h2>카피바이저 고도화 기능 구조</h2></div>
+    <p class="lede one-line">카피바이저는 카피에 이미지 한 장을 얹는 툴이 아니다. 브리프를 해석하고 디자인을 조립하는 툴로 재정의한다.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>모듈</th><th>역할</th><th>바이브코딩 구현 방식</th></tr></thead>
+      <tbody>
+        <tr><td>Creative Director</td><td>브리프를 해석해 광고 목적, 우선순위, 톤, 레이아웃, 비주얼 방향을 결정</td><td class="how">LLM 프롬프트 + JSON</td></tr>
+        <tr><td>Copy Engine</td><td>카피 3안 생성, 문장 분해, 중요도 지정, 길이/톤 제어</td><td class="how">프롬프트 템플릿 2~3개부터 시작</td></tr>
+        <tr><td>Background</td><td>Clean Studio, Gradient, Color Block, Lifestyle, Editorial, Abstract</td><td class="how">배경만 생성하고 텍스트는 넣지 않음</td></tr>
+        <tr><td>Product Treatment</td><td>상품 크기, 위치, 그림자, 글로우, 받침대, 각도</td><td class="how">Hero Large / Center / Floating 등 프리셋</td></tr>
+        <tr><td>Decoration</td><td>Badge, Shape, Line, Arrow, Frame, Pattern, Sticker</td><td class="how">디자이너 제작 SVG/PNG 라이브러리 + AI 선택</td></tr>
+        <tr><td>Effect</td><td>Shadow, Glow, Blur, Gradient Overlay, Vignette</td><td class="how">CSS/Canvas/합성 규칙 기반 프리셋</td></tr>
+        <tr><td>Composition</td><td>레이아웃 규칙에 따라 카피·상품·장식·효과 조립</td><td class="how">AI는 선택, 코드는 규칙 적용</td></tr>
+      </tbody>
+      <tbody class="grp-merge">
+        <tr class="grp"><td colspan="3">솔루션 통합 단계에서 진행</td></tr>
+        <tr><td>Design Critic</td><td>완성 소재 평가 및 수정 포인트 제시</td><td class="how">초기에는 평가만, 자동 수정은 P2</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- 5 -->
+  <section class="page" id="data" data-title="5. Creative Data 최소 구조">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Creative Data 최소 구조</h2></div>
+    <p class="lede one-line">초기 단계에서는 복잡한 DB 스키마보다 카피바이저의 결과를 베리바이저와 모션팩토리가 다시 읽을 수 있는 최소 구조가 우선이다.</p>
+    <div class="cd">
+<pre class="json">{
+  <span class="k">"copy"</span>: {
+    <span class="k">"headline"</span>: "",
+    <span class="k">"highlight"</span>: "",
+    <span class="k">"subcopy"</span>: "",
+    <span class="k">"cta"</span>: ""
+  },
+  <span class="k">"visual"</span>: {
+    <span class="k">"background"</span>: "",
+    <span class="k">"product"</span>: "",
+    <span class="k">"decorations"</span>: []
+  },
+  <span class="k">"layout"</span>: {
+    <span class="k">"type"</span>: "L02",
+    <span class="k">"objects"</span>: ["x", "y", "width", "height", "role", "priority"]
+  }
+}</pre>
+      <div class="cd-notes">
+        <div><b>copy</b><p>Copy Engine이 분해한 정보 구조. Motion에서 Headline·CTA 역할별 애니메이션의 기준이 된다.</p></div>
+        <div><b>visual</b><p>배경, 상품 처리, 장식 요소를 분리해 저장한다. 사이즈가 바뀌어도 요소 단위로 재배치할 수 있다.</p></div>
+        <div><b>layout</b><p>레이아웃 타입과 각 객체의 좌표·크기·역할·우선순위. Resize의 Responsive Rule이 이 값을 읽는다.</p></div>
+        <div class="principle">
+          <strong>Creative Data가 공통 원본이고 PSD는 출력 포맷이다.</strong>
+          <p>카피바이저가 60~70% 안정되는 시점부터 이 구조를 고정하고 베리바이저와 모션팩토리 연결을 시작한다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- 6 -->
+  <section class="page" id="kpi" data-title="6. KPI 및 성공 기준">
+    <div class="sec-head"><span class="sec-num">6</span><h2>KPI 및 성공 기준</h2></div>
+    <div class="kpis">
+      <div class="kpi"><span class="area">디자인 활용도</span><div class="big">60~70<small>% 이상</small></div><p>AI 결과를 실제 제작 베이스로 활용</p><div class="how">실제 브리프 20~30개 평가</div></div>
+      <div class="kpi"><span class="area">수정 시간</span><div class="big">5~10<small>분</small></div><p>디자이너 보정 시간 목표</p><div class="how">기존 제작 시간과 비교</div></div>
+      <div class="kpi"><span class="area">Resize</span><div class="big">80<small>% 이상</small></div><p>3개 주요 비율에서 수동 재배치 없이 활용</p><div class="how mono">4:5 / 9:16 / 16:9 테스트</div></div>
+      <div class="kpi"><span class="area">Motion</span><div class="big">70<small>% 이상</small></div><p>기본 모션을 추가 타임라인 작업 없이 출력</p><div class="how">대표 소재 기준 반복 테스트</div></div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+
+  <section class="page" id="defer" data-title="7. MVP에서 미룰 것">
+      <div>
+        <div class="sec-head"><span class="sec-num">7</span><h2>MVP에서 의도적으로 미룰 것</h2></div>
+        <ul class="defer">
+          <li>AI가 완전 자유롭게 좌표와 레이아웃을 생성하는 기능</li>
+          <li>자체 이미지 생성 모델 학습 또는 자체 PSD 파서 개발</li>
+          <li>장식 요소를 전부 AI로 생성하는 구조</li>
+          <li>Design Critic이 자동으로 수정까지 수행하는 완전 자동 루프</li>
+          <li>수십 개 스타일/사이즈/브랜드 동시 지원</li>
+          <li>복잡한 계정·권한·협업·승인·버전 관리 시스템</li>
+        </ul>
+      </div>
+  </section>
+
+</main>
+
+<script>
+const PHASES = [
+  { id: 0, s: 1, e: 1, t: "prep", name: "현 상태 정리", work: "3개 툴의 입력·출력·레이어/데이터 사용 범위를 표로 정리한다.", gate: "공통 데이터 목록과 연결 포인트를 설명할 수 있다." },
+  { id: 1, s: 1, e: 2, t: "solo", name: "Creative Director", work: "브리프를 바로 카피로 넘기지 않고 광고 목적, 핵심 메시지, 정보 우선순위, 톤, 추천 레이아웃, 비주얼 방향을 JSON으로 구조화한다.", gate: "같은 브리프에서 카피뿐 아니라 디자인 방향까지 안정적으로 나온다." },
+  { id: 2, s: 2, e: 3, t: "solo", name: "Copy Engine 분리", work: "카피를 Headline / Highlight / Subcopy / Qualifier / CTA로 분해하고 3안 생성, 길이와 강조도를 제어한다.", gate: "카피가 문장이 아니라 디자인 가능한 정보 구조가 된다." },
+  { id: 3, s: 3, e: 5, t: "solo", name: "Visual Engine 1차", work: "Background / Product Treatment / Decoration / Effect를 분리한다. 장식과 효과는 디자이너 라이브러리+프리셋 중심으로 구현한다.", gate: "기존 단순 소재보다 디자인 밀도와 변주 폭이 눈에 띄게 증가한다." },
+  { id: 4, s: 4, e: 6, t: "solo", name: "Layout / Composition", work: "5~10개 레이아웃 규칙을 만들고 AI는 레이아웃을 선택, 코드는 정해진 좌표·Safe Area·우선순위를 적용한다.", gate: "1:1 소재가 최소 3개 이상의 구조로 안정적으로 생성된다." },
+  { id: 5, s: 6, e: 6, t: "solo", name: "카피바이저 품질 검증", work: "실제 브리프 20~30개로 결과물을 생성해 디자이너 관점에서 평가한다.", gate: "실제 제작 베이스로 쓸 만한 비율과 수정 시간이 유의미하게 개선된다." },
+  { id: 6, s: 5, e: 7, t: "merge", name: "Creative Data 확정", work: "Copy / Visual / Layout / 좌표·크기·역할을 최소 JSON 구조로 저장하고 재구성 가능하게 만든다.", gate: "저장된 Creative Data만으로 동일 소재를 재현할 수 있다." },
+  { id: 7, s: 7, e: 8, t: "merge", name: "베리바이저 연결 PoC", work: "1:1을 4:5, 9:16, 16:9로 변환한다. 단순 스케일이 아니라 레이아웃별 Responsive Rule을 적용한다.", gate: "PSD 분석 없이 Creative Data로 3개 핵심 사이즈가 변환된다." },
+  { id: 8, s: 8, e: 9, t: "merge", name: "모션팩토리 연결 PoC", work: "Headline, Product, Badge, CTA, Decoration 역할별 기본 Motion Mapping을 만든다.", gate: "PSD 레이어 분석 없이 Creative Data로 기본 모션이 적용된다." },
+  { id: 9, s: 8, e: 10, t: "merge", name: "Design Critic", work: "완성 이미지를 멀티모달 AI로 평가하고 Product Emphasis, Hierarchy, CTA, Density 등의 피드백을 JSON으로 반환한다.", gate: "자동 수정 전 단계로서 수정 포인트가 일관되게 제안된다." },
+  { id: 10, s: 10, e: 11, t: "merge", name: "통합 Workflow", work: "브리프 → 소재 생성 → 안 선택 → Resize/Motion 선택 → 출력까지 하나의 흐름으로 연결한다.", gate: "사용자가 파일을 수동으로 옮기지 않고 전체 흐름을 수행한다." },
+  { id: 11, s: 11, e: 12, t: "merge", name: "통합 UI / QA", work: "Project, Brief, Creative Direction, Creative A/B/C, Resize/Motion, Output 중심의 단순 UI를 만든다.", gate: "실사용 시나리오가 끊김 없이 동작하고 주요 오류가 제거된다." }
+];
+const LABEL = { prep: "준비", solo: "카피바이저 고도화", merge: "통합" };
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const wk = p => p.s === p.e ? `${p.s}주차` : `${p.s}~${p.e}주차`;
+
+const g = document.getElementById("gantt");
+let html = `<div class="hd">Phase</div>` + Array.from({ length: 12 }, (_, i) => `<div class="hd">W${i + 1}</div>`).join("");
+for (const p of PHASES) {
+  html += `<div class="name"><span class="mono">P${p.id}</span><a href="#phase-${p.id}">${esc(p.name)}</a></div>`;
+  html += `<div class="track"><div class="seg ${p.t}" style="grid-column:${p.s} / ${p.e + 1}" title="${esc(p.name)} · ${wk(p)}"></div></div>`;
+}
+g.innerHTML = html;
+
+const phaseHTML = p => `
+  <article class="phase" id="phase-${p.id}">
+    <div class="meta"><span class="pid">Phase ${p.id}</span><span class="wk">${wk(p)}</span><span class="chip ${p.t}">${LABEL[p.t]}</span></div>
+    <div><h3>${esc(p.name)}</h3><p class="work">${esc(p.work)}</p></div>
+    <div class="gate"><em>다음 단계 진입 기준</em>${esc(p.gate)}</div>
+  </article>`;
+document.getElementById("phasesA").innerHTML = PHASES.filter(p => p.id <= 5).map(phaseHTML).join("");
+document.getElementById("phasesB").innerHTML = PHASES.filter(p => p.id > 5).map(phaseHTML).join("");
+
+// 페이지 표시 및 이동
+const pages = [...document.querySelectorAll(".page")];
+const $ = id => document.getElementById(id);
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let cur = 0;
+$("totalNum").textContent = pages.length;
+
+function update() {
+  const line = innerHeight * 0.4;
+  let idx = 0;
+  pages.forEach((p, i) => { if (p.getBoundingClientRect().top <= line) idx = i; });
+  cur = idx;
+  $("curNum").textContent = cur + 1;
+  $("tbSec").textContent = pages[cur].dataset.title;
+  $("progress").style.width = ((cur + 1) / pages.length * 100) + "%";
+  $("prevBtn").disabled = cur === 0;
+  $("nextBtn").disabled = cur === pages.length - 1;
+}
+function go(i) {
+  i = Math.max(0, Math.min(pages.length - 1, i));
+  pages[i].scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+}
+let raf;
+addEventListener("scroll", () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+addEventListener("resize", update);
+$("prevBtn").addEventListener("click", () => go(cur - 1));
+$("nextBtn").addEventListener("click", () => go(cur + 1));
+update();
+
+// 마우스로 위/아래 드래그하면 한 페이지씩 이동 (터치는 기본 스와이프 + 스냅)
+let drag = null;
+addEventListener("pointerdown", e => {
+  if (e.pointerType !== "mouse" || e.button !== 0) return;
+  if (e.target.closest("a, button, pre, .scroll, .tbl, .topbar")) return;
+  drag = { y: e.clientY, i: cur, page: pages[cur] };
+  drag.page.classList.add("dragging");
+  e.preventDefault();
+});
+addEventListener("pointerup", e => {
+  if (!drag) return;
+  const dy = e.clientY - drag.y;
+  drag.page.classList.remove("dragging");
+  if (Math.abs(dy) > 50) go(drag.i + (dy < 0 ? 1 : -1));
+  drag = null;
+});
+</script>
+</body>
+</html>
